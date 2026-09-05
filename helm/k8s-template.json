@@ -41,6 +41,13 @@
         "default": null,
         "description": "The CPU resource limit for the Kubernetes job container. Uses Kubernetes resource quantity format (e.g. '500m' for half a CPU, '2' for two CPUs). If not provided, no CPU limit is configured."
       },
+      "gpu_limit": {
+        "anyOf": [{ "type": "string" }, { "type": "null" }],
+        "title": "GPU Limit",
+        "default": null,
+        "examples": ["1"],
+        "description": "The number of NVIDIA GPUs to request for the Kubernetes job container (nvidia.com/gpu). Requires the NVIDIA device plugin to be running on the cluster and the node to advertise nvidia.com/gpu as an allocatable resource. If not provided, no GPU is requested."
+      },
       "namespace": {
         "type": "string",
         "title": "Namespace",
@@ -174,7 +181,8 @@
                 "resources": {
                   "limits": {
                     "cpu": "{{ cpu_limit }}",
-                    "memory": "{{ memory_limit }}"
+                    "memory": "{{ memory_limit }}",
+                    "nvidia.com/gpu": "{{ gpu_limit }}"
                   },
                   "requests": {
                     "cpu": "{{ cpu_request }}",

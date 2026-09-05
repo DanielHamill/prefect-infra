@@ -1,4 +1,4 @@
-FROM prefecthq/prefect:3.8.4-python3.12
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 
 WORKDIR /opt/prefect/default-ml-image/
 
