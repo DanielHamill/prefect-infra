@@ -1,0 +1,6 @@
+server:
+  uiConfig:
+    prefectUiApiUrl: "http://danielhamill.me:30200/api"
+service:
+  type: NodePort
+  nodePort: 30200
