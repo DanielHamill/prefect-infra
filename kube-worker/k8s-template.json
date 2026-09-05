@@ -19,7 +19,7 @@
       "image": {
         "anyOf": [{ "type": "string" }, { "type": "null" }],
         "title": "Image",
-        "default": null,
+        "default": "danielhamill/mlops-test:latest",
         "examples": ["docker.io/prefecthq/prefect:3-latest"],
         "description": "The image reference of a container image to use for created jobs. If not set, the latest Prefect image will be used."
       },

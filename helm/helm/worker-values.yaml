@@ -2,5 +2,8 @@ worker:
   apiConfig: selfHostedServer
   config:
     workPool: kube-test
+    baseJobTemplate:
+      # populated via --set-file at install/upgrade time, see below
+      configuration: null
   selfHostedServerApiConfig:
     apiUrl: http://prefect-server.prefect.svc.cluster.local:4200/api
