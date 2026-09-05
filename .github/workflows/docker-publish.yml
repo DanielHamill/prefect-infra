@@ -6,7 +6,7 @@ on:
       - default-ml-image/Dockerfile
 
 env:
-  IMAGE_NAME: danielhamill/default-ml-image
+  IMAGE_NAME: danielhamill/mlops-test
 
 jobs:
   build-and-push:
