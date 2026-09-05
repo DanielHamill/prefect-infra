@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - default-ml-image/Dockerfile
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: danielhamill/mlops-test
