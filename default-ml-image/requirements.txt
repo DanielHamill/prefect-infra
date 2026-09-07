@@ -1,4 +1,5 @@
 numpy
 pandas
+mlflow
 prefect>=3.8.4
 scikit-learn
