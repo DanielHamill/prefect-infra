@@ -23,6 +23,16 @@ storage:
 service:
   type: NodePort
 
+# MLflow 2.14+ rejects requests whose Host header isn't localhost or a
+# private IP (DNS-rebinding protection), so accessing the UI via
+# danielhamill.me needs an explicit allowlist entry. The ":*" variant
+# matches the NodePort's port number (Host headers include the port when
+# it isn't 80/443). Health/readiness probes hit /health, which is exempt
+# from this check, so this is safe to set without breaking the pod.
+server:
+  value_options:
+    allowed_hosts: "danielhamill.me,danielhamill.me:*"
+
 mlflow:
   backendStoreUriFrom:
     secretKeyRef:
