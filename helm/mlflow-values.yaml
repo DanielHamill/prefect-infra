@@ -1,0 +1,24 @@
+# Values for the official MLflow chart (oci://ghcr.io/mlflow/charts/mlflow).
+#
+# Setup order:
+#   1. Create the "mlflow" namespace and mlflow-db-credentials secret, then
+#      `kubectl apply -f mlflow-postgres.yaml` (see comments in that file).
+#   2. Create the mlflow-db-secret referenced below:
+#        kubectl create secret generic mlflow-db-secret -n mlflow \
+#          --from-literal=uri="postgresql://mlflow:<password>@mlflow-postgres:5432/mlflow"
+#   3. helm upgrade --install mlflow oci://ghcr.io/mlflow/charts/mlflow \
+#        --namespace mlflow --create-namespace -f mlflow-values.yaml
+
+# Backs the artifact store with a PVC on k3s's default "local-path"
+# StorageClass, i.e. a directory on the host node's disk.
+storage:
+  enabled: true
+  size: 10Gi
+  storageClassName: "local-path"
+
+mlflow:
+  backendStoreUriFrom:
+    secretKeyRef:
+      name: mlflow-db-secret
+      key: uri
+  artifactsDestination: "/mlflow/artifacts"

@@ -1,0 +1,80 @@
+# In-cluster Postgres backend store for MLflow, backed by k3s's default
+# "local-path" StorageClass (i.e. the host node's disk).
+#
+# Before applying, create the credentials secret imperatively so the
+# password never ends up committed to git:
+#
+#   kubectl create namespace mlflow
+#   kubectl create secret generic mlflow-db-credentials -n mlflow \
+#     --from-literal=POSTGRES_USER=mlflow \
+#     --from-literal=POSTGRES_PASSWORD=<choose-a-password> \
+#     --from-literal=POSTGRES_DB=mlflow
+#
+# Then:
+#   kubectl apply -f mlflow-postgres.yaml
+#
+# The MLflow chart itself needs a second secret with a full connection
+# URI (see mlflow-values.yaml), e.g.:
+#
+#   kubectl create secret generic mlflow-db-secret -n mlflow \
+#     --from-literal=uri="postgresql://mlflow:<password>@mlflow-postgres:5432/mlflow"
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mlflow-postgres-data
+  namespace: mlflow
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-postgres
+  namespace: mlflow
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mlflow-postgres
+  template:
+    metadata:
+      labels:
+        app: mlflow-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          envFrom:
+            - secretRef:
+                name: mlflow-db-credentials
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mlflow-postgres-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-postgres
+  namespace: mlflow
+spec:
+  selector:
+    app: mlflow-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
