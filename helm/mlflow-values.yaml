@@ -29,9 +29,21 @@ service:
 # matches the NodePort's port number (Host headers include the port when
 # it isn't 80/443). Health/readiness probes hit /health, which is exempt
 # from this check, so this is safe to set without breaking the pod.
+#
+# allowed_hosts only covers the Host header. Separately, MLflow's
+# CORSBlockingMiddleware rejects any state-changing request (POST/PUT/
+# PATCH/DELETE) whose Origin header isn't localhost and isn't in
+# cors_allowed_origins -- which defaults to empty, i.e. blocks everything
+# non-localhost. Browsers send Origin on fetch POSTs (e.g. the UI's
+# runs/search call used to list runs on the experiment page); curl
+# doesn't unless told to, which is why "GET run" worked but "POST
+# search runs" came back 403 (surfaced in the UI as INTERNAL_ERROR).
+# Origin values include the scheme, so this needs "http://" unlike
+# allowed_hosts.
 server:
   value_options:
     allowed_hosts: "danielhamill.me,danielhamill.me:*"
+    cors_allowed_origins: "http://danielhamill.me:*"
 
 mlflow:
   backendStoreUriFrom:
