@@ -16,6 +16,13 @@ storage:
   size: 10Gi
   storageClassName: "local-path"
 
+# Exposes the MLflow UI as a NodePort so it's reachable at
+# danielhamill.me:<nodePort>. The chart doesn't support pinning an exact
+# nodePort, so Kubernetes auto-assigns one from 30000-32767 — after
+# deploying, run `kubectl get svc -n mlflow` to see which port it picked.
+service:
+  type: NodePort
+
 mlflow:
   backendStoreUriFrom:
     secretKeyRef:
