@@ -3,7 +3,7 @@ name: Build and push Docker image
 on:
   push:
     paths:
-      - default-ml-image
+      - default-ml-image/**
   workflow_dispatch:
 
 env:
