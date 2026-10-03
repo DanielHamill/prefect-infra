@@ -2,6 +2,7 @@ numpy
 pandas
 mlflow
 lightning
+torchvision==0.21.0
 prefect>=3.8.4
-scikit-learn 
+scikit-learn
 cuml-cu12>=25.10
