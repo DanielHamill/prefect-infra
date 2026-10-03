@@ -1,6 +1,7 @@
 numpy
 pandas
 mlflow
+lightning
 prefect>=3.8.4
 scikit-learn 
 cuml-cu12>=25.10
