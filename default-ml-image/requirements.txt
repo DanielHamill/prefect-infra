@@ -1,9 +1,15 @@
+torch
+torchvision
 numpy
 pandas
 mlflow
 lightning
-torchvision==0.21.0
-prefect>=3.8.4
+# match the Prefect server (3.8.4)
+prefect>=3.8.4,<3.9
 scikit-learn
 cuml-cu12>=25.10
 mlrose-ky
+# RL report
+bettermdptools==0.11.0
+gymnasium==1.3.0
+pyyaml
